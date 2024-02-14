@@ -1,0 +1,74 @@
+.paginationV1 {
+  display: flex;
+  @include list-unstyled();
+  @include border-radius();
+}
+
+.page-link {
+  position: relative;
+  display: block;
+  padding: $paginationV1-padding-y $paginationV1-padding-x;
+  margin-left: -$paginationV1-border-width;
+  line-height: $paginationV1-line-height;
+  color: $paginationV1-color;
+  text-decoration: if($link-decoration == none, null, none);
+  background-color: $paginationV1-bg;
+  border: $paginationV1-border-width solid $paginationV1-border-color;
+
+  &:hover {
+    z-index: 2;
+    color: $paginationV1-hover-color;
+    text-decoration: none;
+    background-color: $paginationV1-hover-bg;
+    border-color: $paginationV1-hover-border-color;
+  }
+
+  &:focus {
+    z-index: 3;
+    outline: $paginationV1-focus-outline;
+    box-shadow: $paginationV1-focus-box-shadow;
+  }
+}
+
+.page-item {
+  &:first-child {
+    .page-link {
+      margin-left: 0;
+      @include border-left-radius($border-radius);
+    }
+  }
+  &:last-child {
+    .page-link {
+      @include border-right-radius($border-radius);
+    }
+  }
+
+  &.active .page-link {
+    z-index: 3;
+    color: $paginationV1-active-color;
+    background-color: $paginationV1-active-bg;
+    border-color: $paginationV1-active-border-color;
+  }
+
+  &.disabled .page-link {
+    color: $paginationV1-disabled-color;
+    pointer-events: none;
+    // Opinionated: remove the "hand" cursor set previously for .page-link
+    cursor: auto;
+    background-color: $paginationV1-disabled-bg;
+    border-color: $paginationV1-disabled-border-color;
+  }
+}
+
+
+//
+// Sizing
+//
+
+.paginationV1-lg {
+  @include paginationV1-size($paginationV1-padding-y-lg, $paginationV1-padding-x-lg, $font-size-lg, $line-height-lg, $border-radius-lg);
+}
+
+.paginationV1-sm {
+  @include paginationV1-size($paginationV1-padding-y-sm, $paginationV1-padding-x-sm, $font-size-sm, $line-height-sm, $border-radius-sm);
+}

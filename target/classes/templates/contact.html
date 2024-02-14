@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>BMoto Online Shop</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <link href="img/favicon.ico" rel="icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/styles/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <header th:include="fragments/header :: header"/>
+
+    <!-- Page Header Start -->
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Contact Us</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a th:href="@{/index}">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Contact</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- Contact Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Contact For Any Queries</span></h2>
+        </div>
+        <div class="row px-xl-5">
+            <div class="col-lg-3 mb-5">
+
+            </div>
+            <div class="col-lg-6 mb-5">
+                <h5 class="font-weight-semi-bold mb-3">Get In Touch</h5>
+                <p>We would love to hear from you! Whether you have inquiries, feedback, or just want to say hello, feel free to reach out using the contact details below:</p>
+                <div class="d-flex flex-column mb-3">
+                    <h5 class="font-weight-semi-bold mb-3">Store information</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>123 Street, Bucharest, Romania</p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>bmoto@bmoto.com</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt text-primary mr-3"></i>+40 bmoto</p>
+                </div>
+            </div>
+            <div class="col-lg-3 mb-5">
+
+            </div>
+        </div>
+    </div>
+    <!-- Contact End -->
+
+    <footer th:include="fragments/footer :: footer"/>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="/lib/easing/easing.min.js"></script>
+    <script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="/mail/jqBootstrapValidation.min.js"></script>
+    <script src="/mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

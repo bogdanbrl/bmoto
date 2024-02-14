@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>BMoto Online Shop</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <link href="img/favicon.ico" rel="icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/styles/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- Topbar Start -->
+<header th:include="fragments/header :: header"/>
+
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Our Shop</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a th:href="@{/index}">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Shop</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Shop Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+        <!-- Shop Sidebar Start -->
+        <div class="col-lg-3 col-md-12">
+
+            <!-- Filter Start -->
+            <div class="border-bottom mb-4 pb-4">
+                <form th:action="@{/shop}" th:object="${pagination}" method="GET" id="filterForm">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search product" th:field="*{strToSearch}" th:onchange="changeFilterAttr(this)">
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sort" class="font-weight-semi-bold mb-1">Sort by:</label>
+                        <select class="form-control" id="sort" th:field="*{sort}" th:onchange="changeFilterAttr(this)">
+                            <option th:value="name">Name</option>
+                            <option th:value="price">Price</option>
+                            <option th:value="manufacturer">Manufacturer</option>
+                            <option th:value="colours.name">Color</option>
+                            <option th:value="genders.name">Gender</option>
+                            <option th:value="sizes.name">Size</option>
+                            <option th:value="category.name">Category</option>
+                            <option th:value="discount.discountPercent">Discount</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productFilterColour" class="font-weight-semi-bold mb-1">Filter by color:</label>
+                        <select class="form-control" id="productFilterColour" th:field="*{criteria.colour}" th:onchange="changeFilterAttr(this)">
+                            <option value="">- Select color -</option>
+                            <option th:each="colour : ${colours}" th:value="${colour.name}" th:text="${colour.name}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productFilterSize" class="font-weight-semi-bold mb-1">Filter by size:</label>
+                        <select class="form-control" id="productFilterSize" th:field="*{criteria.size}" th:onchange="changeFilterAttr(this)">
+                            <option value="">- Select size -</option>
+                            <option th:each="size : ${sizes}" th:value="${size.name}" th:text="${size.name}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productFilterGender" class="font-weight-semi-bold mb-1">Filter by gender:</label>
+                        <select class="form-control" id="productFilterGender" th:field="*{criteria.gender}" th:onchange="changeFilterAttr(this)">
+                            <option value="">- Select gender -</option>
+                            <option th:each="gender : ${genders}" th:value="${gender.name}" th:text="${gender.name}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productFilterCategory" class="font-weight-semi-bold mb-1">Filter by category:</label>
+                        <select class="form-control" id="productFilterCategory" th:field="*{criteria.category}" th:onchange="changeFilterAttr(this)">
+                            <option value="">- Select category -</option>
+                            <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label for="minPrice" class="font-weight-semi-bold mb-1">Min price:</label>
+                            <input type="number" class="form-control" id="minPrice" placeholder="Min price" th:field="*{criteria.minPrice}" th:onchange="changeFilterAttr(this)">
+                        </div>
+                        <div class="form-group col">
+                            <label for="maxPrice" class="font-weight-semi-bold mb-1">Max price:</label>
+                            <input type="number" class="form-control" id="maxPrice" placeholder="Max price" th:field="*{criteria.maxPrice}" th:onchange="changeFilterAttr(this)">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <!-- Filter End -->
+
+        </div>
+        <!-- Shop Sidebar End -->
+
+
+        <!-- Shop Product Start -->
+        <div class="col-lg-9 col-md-12">
+            <div class="row pb-3">
+                <div class="col-lg-4 col-md-6 col-sm-12 pb-1" th:each="product : ${products}">
+                    <div class="card product-item border-0 mb-4">
+                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                            <img class="img-fluid w-100" th:src="@{'/products/' + ${product.id} + '/image'}" alt="">
+                        </div>
+                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                            <h6 class="text-truncate mb-3" th:text="${product.name}">Colorful Stylish Shirt</h6>
+                            <div th:if="${product.discount.discountPercent} > 0">
+                                <div class="d-flex justify-content-center">
+                                    <h6 th:text="(${product.price} - (${product.discount.discountPercent} * ${product.price})/100) + ' RON'">$123.00</h6>
+                                    <h6 class="text-muted ml-2">
+                                        <del th:text="${product.price} + ' RON'">$123.00</del>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div th:if="${product.discount.discountPercent} == 0">
+                                <div class="d-flex justify-content-center">
+                                    <h6 th:text="${product.price} + ' RON'">$123.00</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between bg-light border">
+                            <a th:href="@{'/products/' + ${product.id} + '/details'}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Details</a>
+                            <button class="btn btn-sm text-dark p-0" th:onclick="'updateCart(\'' + ${product.id} + '\')'"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-12 pb-1">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mb-3">Total elements: [[${products.totalElements}]]</ul>
+                        <div th:if="${(products.totalPages-1) > 0}">
+                            <ul class="pagination justify-content-center mb-3">
+                                <div th:each="i: ${#numbers.sequence(0, products.totalPages-1)}">
+                                    <li class="page-item"><a class="page-link" th:href="@{'/shop?page=' + ${i}
+                                                                  + '&strToSearch=' + ${pagination.strToSearch}
+                                                                  + '&sort=' + ${pagination.sort}
+                                                                  + '&criteria.colour=' + ${pagination.criteria.colour}
+                                                                  + '&criteria.size=' + ${pagination.criteria.size}
+                                                                  + '&criteria.gender=' + ${pagination.criteria.gender}
+                                                                  + '&criteria.category=' + ${pagination.criteria.category}
+                                                                  + '&criteria.minPrice=' + ${pagination.criteria.minPrice}
+                                                                  + '&criteria.maxPrice=' + ${pagination.criteria.maxPrice}}">[[${i+1}]]</a></li>
+                                </div>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+
+
+
+
+
+
+            </div>
+        </div>
+        <!-- Shop Product End -->
+    </div>
+</div>
+<!-- Shop End -->
+
+<!-- CSRF start -->
+<input id="token" type="hidden" th:value="${_csrf.token}" />
+<input id="headerTokenName" type="hidden" th:value="${_csrf.headerName}" />
+<!-- CSRF End -->
+
+<footer th:include="fragments/footer :: footer"/>
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="/lib/easing/easing.min.js"></script>
+<script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+
+<script>
+    function changeFilterAttr(val) {
+          $("#filterForm").submit();
+    }
+
+    function updateCart(id) {
+
+        var token = document.getElementById('token');
+        var tokenValue = token.value;
+        var headerTokenName = document.getElementById('headerTokenName');
+        var headerTokenNameValue = headerTokenName.value;
+
+        $.ajax({
+            type: 'POST',
+            url: '/cart/add',
+            data: {
+                id: id,
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(headerTokenNameValue, tokenValue);
+            },
+
+            success: function () {
+                // window.location.href = '/cart';
+                alert('Added to cart.');
+            },
+
+            error: function (error) {
+                alert('Failed to add to cart.');
+            }
+        });
+    }
+ </script>
+
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BMoto Dashboard</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/styles/dashboard/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/styles/dashboard/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Content Wrapper. Contains page content -->
+  <header th:include="dashboard/side-bar-menu :: side-bar-menu"/>
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+
+          <div class="col-sm-3">
+
+          </div>
+          <div class="col-sm-6">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Product</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form action="#" th:action="@{/dashboard/products/save}" th:object="${product}" method="POST" enctype="multipart/form-data">
+                <div class="card-body">
+                  <div class="form-group">
+                    <input type="hidden" class="form-control" id="productInputId" placeholder="Enter ID" th:field="*{id}">
+                  </div>
+                  <div class="form-group">
+                    <label for="productInputName">Name</label>
+                    <input type="text" class="form-control" id="productInputName" placeholder="Enter name" th:field="*{name}">
+                  </div>
+                  <div class="form-group">
+                    <label for="productInputDescription">Description</label>
+                    <textarea rows="4" class="form-control" id="productInputDescription" placeholder="Enter description" th:field="*{description}"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="productInputPrice">Price</label>
+                    <input type="number" class="form-control" id="productInputPrice" placeholder="Enter price" th:field="*{price}">
+                  </div>
+                  <div class="form-group">
+                    <label for="productInputColour">Colour</label>
+                    <select class="form-control" th:field="*{colours}">
+                      <option class="form-control" id="productInputColour" th:each="colour : ${productAttributes.colours}" th:value="${colour.id}" th:text="${colour.name}"></option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="productInputSize">Size</label>
+                    <select class="form-control" th:field="*{sizes}">
+                      <option class="form-control" id="productInputSize" th:each="size : ${productAttributes.sizes}" th:value="${size.id}" th:text="${size.name}"></option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="productInputGender">Gender</label>
+                    <select class="form-control" th:field="*{genders}">
+                      <option class="form-control" id="productInputGender" th:each="gender : ${productAttributes.genders}" th:value="${gender.id}" th:text="${gender.name}"></option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="productInputManufacturer">Manufacturer</label>
+                    <input type="text" class="form-control" id="productInputManufacturer" placeholder="Enter manufacturer" th:field="*{manufacturer}">
+                  </div>
+                  <div class="form-group">
+                    <label for="productInputCategory">Category</label>
+                    <select class="form-control" th:field="*{category}">
+                      <option class="form-control" id="productInputCategory" th:each="category : ${productAttributes.categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="productInputInventory">Product</label>
+                    <input type="number" class="form-control" id="productInputInventory" placeholder="Enter product quantity" th:field="*{inventory.quantity}">
+                  </div>
+                  <div class="form-group">
+                    <label for="productInputDiscount">Discount</label>
+                    <input type="number" class="form-control" id="productInputDiscount" placeholder="Enter discount percentage" th:field="*{discount.discountPercent}">
+                  </div>
+                  <div class="form-group">
+                    <input type="hidden" class="form-control" id="productInputCreatedAt" placeholder="Enter discount percentage" th:field="*{createdAt}" readonly>
+                  </div>
+                  <div class="form-group">
+                    <input type="hidden" class="form-control" id="productInputImage" placeholder="Enter discount percentage" th:field="*{image}" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label for="file">Select image</label>
+                    <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file" name="file" class="custom-file-input" id="file">
+                        <label class="custom-file-label" for="file">Choose file</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+          </div>
+          <div class="col-sm-3">
+          </div>
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="/styles/dashboard/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="/styles/dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- bs-custom-file-input -->
+<script src="/styles/dashboard/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/styles/dashboard/dist/js/adminlte.min.js"></script>
+
+<!-- Page specific script -->
+<script>
+$(function () {
+  bsCustomFileInput.init();
+});
+</script>
+</body>
+</html>

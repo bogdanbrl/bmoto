@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>BMoto Online Shop</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <link href="img/favicon.ico" rel="icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/styles/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <header th:include="fragments/header :: header"/>
+
+
+
+        <!-- Cart Start -->
+        <div class="container-fluid pt-5" th:object="${cart}">
+            <div class="row px-xl-5">
+                <div class="col-lg-8 table-responsive mb-5">
+                    <table class="table table-bordered text-center mb-0">
+                        <thead class="bg-secondary text-dark">
+                            <tr>
+                                <th>Products</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody class="align-middle" th:each="item, iterStat : *{items}">
+                        <tr>
+                            <td class="align-middle" th:text="${item.product.name}">Colorful Stylish Jacket</td>
+                            <td class="align-middle" th:text="${item.productPrice}">$150</td>
+                            <td class="align-middle">
+                                <div class="input-group quantity mx-auto" style="width: 150px;">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-primary btn-minus" th:onclick="'updateQuantity(\'' + ${iterStat.index} + '\', -1)'">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control bg-secondary text-center" th:id="'qty_' + ${iterStat.index}" th:value="${item.qty}" readonly="readonly">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-primary btn-plus" th:onclick="'updateQuantity(\'' + ${iterStat.index} + '\', 1)'">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle" th:text="${item.subTotal}">$150</td>
+                            <td class="align-middle">
+                                <button class="btn btn-sm btn-primary" th:onclick="'removeItem(\'' + ${iterStat.index} + '\')'">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card border-secondary mb-5">
+                        <div class="card-header bg-secondary border-0">
+                            <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-3 pt-1">
+                                <h6 class="font-weight-medium">Subtotal</h6>
+                                <h6 class="font-weight-medium" th:text="*{subtotal} + ' RON'">$150</h6>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <h6 class="font-weight-medium">Shipping</h6>
+                                <h6 class="font-weight-medium" th:text="*{shipping} + ' RON'">25.0</h6>
+                            </div>
+                        </div>
+                        <div class="card-footer border-secondary bg-transparent">
+                            <div class="d-flex justify-content-between mt-2">
+                                <h5 class="font-weight-bold">Total&nbsp;&nbsp; </h5>
+                                <h5 class="font-weight-bold" th:text="*{total} + ' RON'">$160</h5>
+                            </div>
+                            <a th:href="@{/payment/checkout}"><button type="button" class="btn btn-block btn-primary my-3 py-3">Proceed To Checkout</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Cart End -->
+
+    <!-- CSRF start -->
+    <input id="token" type="hidden" th:value="${_csrf.token}" />
+    <input id="headerTokenName" type="hidden" th:value="${_csrf.headerName}" />
+    <!-- CSRF End -->
+
+    <footer th:include="fragments/footer :: footer"/>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="/lib/easing/easing.min.js"></script>
+    <script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script>
+    function updateQuantity(index, delta) {
+        var token = document.getElementById('token');
+        var tokenValue = token.value;
+        var headerTokenName = document.getElementById('headerTokenName');
+        var headerTokenNameValue = headerTokenName.value;
+
+        var input = document.getElementById('qty_' + index);
+        var currentValue = parseInt(input.value);
+
+        // Perform the update on the client side
+        currentValue += delta;
+        input.value = currentValue;
+
+        $.ajax({
+            type: 'PUT',
+            url: '/cart/updateQuantity',
+            data: {
+                index: index,
+                quantity: currentValue
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(headerTokenNameValue, tokenValue);
+            },
+            success: function () {
+                // Log success or perform additional actions if needed
+                window.location.href = '/cart';
+            },
+            error: function () {
+                // alert('Failed to update quantity on the server.');
+            }
+        });
+
+    }
+
+    function removeItem(index) {
+
+        var token = document.getElementById('token');
+        var tokenValue = token.value;
+        var headerTokenName = document.getElementById('headerTokenName');
+        var headerTokenNameValue = headerTokenName.value;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/cart/remove',
+            data: {
+                index: index,
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(headerTokenNameValue, tokenValue);
+            },
+            success: function () {
+                // Log success or perform additional actions if needed
+                window.location.href = '/cart';
+                // alert('Cart updated on the server successfully.');
+
+            },
+            error: function () {
+                // alert('Failed to update cart on the server.');
+            }
+        });
+    }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>BMoto Online Shop</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <link href="img/favicon.ico" rel="icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/styles/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<header th:include="fragments/header :: header"/>
+
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Product Detail</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Product Detail</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Shop Detail Start -->
+<div class="container-fluid py-5" th:object="${product}">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 pb-5">
+            <img class="w-100 h-100" th:src="@{'/products/' + *{id} + '/image'}" alt="">
+        </div>
+
+        <div class="col-lg-7 pb-5">
+            <h3 class="font-weight-semi-bold" th:text="*{#strings.capitalize(name)}">Product name</h3>
+            <div class="d-flex" th:if="${product.discount.discountPercent} > 0">
+                    <h3 class="font-weight-semi-bold mb-4" th:text="(${product.price} - (${product.discount.discountPercent} * ${product.price})/100) + ' RON'">$123.00</h3>
+                    <h3 class="font-weight-semi-bold mb-4 text-muted ml-2">
+                        <del th:text="${product.price} + ' RON'">$123.00</del>
+                    </h3>
+            </div>
+            <div class="d-flex" th:if="${product.discount.discountPercent} == 0">
+                    <h3 class="font-weight-semi-bold mb-4" th:text="${product.price} + ' RON'">$123.00</h3>
+            </div>
+            <p class="mb-4" th:text="*{description}">Volup erat ipsum diam elitr rebum et dolor. gna lorem ut.</p>
+            <div class="d-flex mb-3">
+                <p class="text-dark font-weight-medium mb-0 mr-3">Size: [[*{sizes[0].name}]]</p>
+            </div>
+            <div class="d-flex mb-4">
+                <p class="text-dark font-weight-medium mb-0 mr-3">Color: [[*{colours[0].name}]]</p>
+            </div>
+            <div class="d-flex mb-4">
+                <p class="text-dark font-weight-medium mb-0 mr-3">Gender: [[*{genders[0].name}]]</p>
+            </div>
+            <div class="d-flex align-items-center mb-4 pt-2">
+                <div class="input-group quantity mr-3" style="width: 130px;">
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary btn-minus" onclick="decrementValue()">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                    <input id="qty" type="text" class="form-control bg-secondary text-center" th:value="${qty}" readonly="readonly">
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary btn-plus" th:onclick="incrementValue()">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+<!--                <form action="#" th:action="@{/cart/add}" method="post">-->
+<!--                    <input type="hidden" th:value="${product.id}" name="id"/>-->
+<!--                    <input id="qtyUpdated" type="hidden" min="1" th:value="${qty}" name="qty"/>-->
+<!--                    <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>-->
+<!--                </form>-->
+                <input id="qtyUpdated" type="hidden" min="1" th:value="${qty}" name="qty">
+                <button class="btn btn-sm text-dark p-0" th:onclick="'updateCart(\'' + ${product.id} + '\')'"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</button>            </div>
+        </div>
+    </div>
+</div>
+<!-- Shop Detail End -->
+
+<!-- CSRF start -->
+<input id="token" type="hidden" th:value="${_csrf.token}" />
+<input id="headerTokenName" type="hidden" th:value="${_csrf.headerName}" />
+<!-- CSRF End -->
+
+<footer th:include="fragments/footer :: footer"/>
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="/lib/easing/easing.min.js"></script>
+<script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+
+<script>
+    function decrementValue() {
+        var input = document.getElementById('qty');
+        var qtyUpdated = document.getElementById('qtyUpdated');
+        var currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+            currentValue--;
+            input.value = currentValue;
+            qtyUpdated.value = currentValue;
+        }
+    }
+
+    function incrementValue() {
+        var input = document.getElementById('qty');
+        var qtyUpdated = document.getElementById('qtyUpdated');
+        var currentValue = parseInt(input.value);
+        currentValue++;
+        input.value = currentValue;
+        qtyUpdated.value = currentValue;
+    }
+
+    function updateCart(id) {
+
+        var token = document.getElementById('token');
+        var tokenValue = token.value;
+        var headerTokenName = document.getElementById('headerTokenName');
+        var headerTokenNameValue = headerTokenName.value;
+
+        var qtyUpdated = document.getElementById('qtyUpdated');
+        var qty = parseInt(qtyUpdated.value);
+
+        $.ajax({
+            type: 'POST',
+            url: '/cart/add',
+            data: {
+                id: id,
+                qty: qty,
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(headerTokenNameValue, tokenValue);
+            },
+            success: function () {
+                // Log success or perform additional actions if needed
+                // window.location.href = '/cart';
+                alert('Product added to the cart!');
+
+            },
+            error: function () {
+                alert('Failed to add product to the cart. Please try again.');
+            }
+        });
+    }
+ </script>
+</body>
+
+</html>

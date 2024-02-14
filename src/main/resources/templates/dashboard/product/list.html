@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BMoto Dashboard</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/styles/dashboard/plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/styles/dashboard/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Content Wrapper. Contains page content -->
+  <header th:include="dashboard/side-bar-menu :: side-bar-menu"/>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+
+              <form th:action="@{/dashboard/products/list}" th:object="${pagination}" method="GET" id="sortForm">
+                <div class="card-header">
+                  <h3 class="card-title">Product list</h3>
+                  <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                      <input type="text" name="table_search" class="form-control float-right" placeholder="Search" th:field="*{strToSearch}" th:onchange="changePageAttr(this)">
+                      <div class="input-group-append">
+                        <button class="btn btn-default" th:onclick="changePageAttr(this)">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-header pb-3">
+                  <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 550px;">
+                      <label class="form-control float-right">Direction:</label>
+                      <select class="form-control input-group-append" th:field="*{direction}" th:onchange="changePageAttr(this)">
+                        <option  th:value="ASC" th:text="ASC">ASC</option>
+                        <option  th:value="DESC" th:text="DESC">DESC</option>
+                      </select>
+                      <label class="form-control float-right">Sort:</label>
+                      <select class="form-control input-group-append" th:field="*{sort}" th:onchange="changePageAttr(this)">
+                        <option th:value="name" th:text="Name">Name</option>
+                        <option th:value="manufacturer" th:text="Manufacturer">Manufacturer</option>
+                        <option th:value="price" th:text="Price">Price</option>
+                        <option th:value="createdAt" th:text="Created">Created</option>
+                        <option th:value="colours.name" th:text="Colour">Colour</option>
+                        <option th:value="genders.name" th:text="Gender">Gender</option>
+                        <option th:value="sizes.name" th:text="Size">Size</option>
+                        <option th:value="category.name" th:text="Category">Category</option>
+                        <option th:value="inventory.quantity" th:text="Pieces">Pieces</option>
+                        <option th:value="discount.discountPercent" th:text="Discount">Discount</option>
+                      </select>
+                      <label class="form-control float-right">Items:</label>
+                      <select class="form-control input-group-append" th:field="*{items}" th:onchange="changePageAttr(this)" id="pageSize">
+                        <option th:value=12 th:text="12">12</option>
+                        <option th:value=18 th:text="18">18</option>
+                        <option th:value=26 th:text="26">26</option>
+                        <option th:value=33 th:text="33">33</option>
+                        <option th:value=42 th:text="42">42</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+
+                <table class="table table-hover text-nowrap" id="table">
+                  <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th></th>
+                    <th>Manufacturer</th>
+                    <th>Price</th>
+                    <th>Created at</th>
+                    <th>Description</th>
+                    <th>Colour</th>
+                    <th>Gender</th>
+                    <th>Size</th>
+                    <th>Category</th>
+                    <th>Pieces</th>
+                    <th>Discount</th>
+                    <th>Actions</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="product : ${products}">
+                    <td th:text="${product.name}">Name</td>
+                    <td><button type="button" class="btn btn-link" data-toggle="modal" data-target="#imageModal" th:onclick="'openImageModal(\'' + ${product.id} + '\')'">
+                          <i class="fas fa-image text-primary"></i>
+                        </button></i>
+                    </td>
+                    <td th:text="${product.manufacturer}">Manufacturer</td>
+                    <td th:text="${product.price}">Price</td>
+                    <td th:text="${product.createdAt}">Created at</td>
+                    <td th:text="${product.description}">Description</td>
+                    <td th:text="${product.getColours().get(0).name}">Colour</td>
+                    <td th:text="${product.getGenders().get(0).name}">Gender</td>
+                    <td th:text="${product.getSizes().get(0).name}">Size</td>
+                    <td th:text="${product.category.name}">Category</td>
+                    <td th:text="${product.inventory.quantity}">Pieces</td>
+                    <td th:text="${product.discount.discountPercent}">Discount</td>
+                    <td>
+                      <a th:href="@{'/dashboard/products/update/' + ${product.id}}"><i class="fas fa-edit text-warning"></i></a>
+                      <i>&nbsp;&nbsp;&nbsp;</i>
+                      <a th:href="@{'/dashboard/products/delete/' + ${product.id}}"><i class="fas fa-trash text-danger"></i></a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+        <!--        paginationV1-->
+        <div>
+          <ul class="pagination pagination-sm float-left"> Total rows: [[${products.totalElements}]]</ul>
+          <ul class="pagination pagination-sm float-right">
+            <li class="page-item"><a class="page-link" th:classappend="${pagination.page == 1} ? 'disabled'" href="#">&laquo;</a></li>
+            <div th:each="i: ${#numbers.sequence(1, products.totalPages)}">
+              <li class="page-item"><a class="page-link" th:href="@{'/dashboard/products/list?page=' + ${i-1}
+                                                                  + '&direction=' + ${pagination.direction}
+                                                                  + '&sort=' + ${pagination.sort}
+                                                                  + '&items=' + ${pagination.items}}">[[${i}]]</a></li>
+            </div>
+            <li class="page-item"><a class="page-link" th:classappend="${pagination.page == products.totalPages} ? 'disabled'" href="#">&raquo;</a></li>
+          </ul>
+        </div>
+        <!--        end paginationV1-->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+</div>
+<!-- ./wrapper -->
+
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Product Image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img id="modalImage" class="img-fluid" alt="Product Image">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+
+<!-- jQuery -->
+<script src="/styles/dashboard/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="/styles/dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- bs-custom-file-input -->
+<script src="/styles/dashboard/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/styles/dashboard/dist/js/adminlte.min.js"></script>
+
+<script type="text/javascript">
+  function changePageAttr(val) {
+      $("#sortForm").submit();
+  }
+
+  function openImageModal(id) {
+        var imageUrl = "/products/" + id + "/image";
+        $("#modalImage").attr("src", imageUrl);
+        $("#imageModal").modal('show');
+   }
+</script>
+
+</body>
+</html>
